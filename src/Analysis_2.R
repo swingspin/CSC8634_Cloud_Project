@@ -47,8 +47,7 @@ library(ggpubr)
 
 (plot_REDA8 = ggarrange(plot_A, plot_B, plot_C,plot_D, plot_E, 
                         labels = c("A", "B", "C","D","E"),
-                        ncol = 2, nrow = 3))# %>% ggexport(filename = "graphs/heat map rendering time of events at level 8.png",
-# width = 1000,height = 1000)
+                        ncol = 2, nrow = 3)) %>% ggexport(filename = "graphs/heat map rendering time of events at level 8.png",width = 1000,height = 1000)
 plot_REDA8
 #Error in ggexport(., filename = "graphs/heat map rendering time of events at level 8.png",  : 
 #could not find function "ggexport"
@@ -56,16 +55,13 @@ plot_REDA8
 
 ##boxplot at level 8-----------------------------------------------------------------------------------
 box_plot_8 = which(is.na(runtime_final_data_8$eventName))
-box_plot_8 = runtime_final_data_8[!is.na(runtime_final_data_12$eventName),]
+box_plot_8 = runtime_final_data_8[!is.na(runtime_final_data_8$eventName),]
 box_plot_8 = box_plot_8 %>% filter(eventType == "STOP")
 
 boxplot_8 = ggplot(box_plot_8, aes(y= time_difference, fill = eventName)) + geom_boxplot()+ labs(title = "boxplot of runtimes of level 8 ")
 boxplot_8
 
-(plot60 = ggarrange(boxplot_12, boxplot_8, 
-                    labels = c("A", "B"),
-                    ncol = 2, nrow = 1)) %>% ggexport(filename = "graphs/boxplot of event run times at level 12 and 8.png",
-                                                      width = 1000,height = 500)
+
 ##---------
 
 ##Runtime analysis on each event name at level 12
@@ -90,7 +86,7 @@ plot_F
 
 
 #by render time
-render_12 = runtime__final_data_12 %>% filter(eventName == "Render")
+render_12 = runtime_final_data_12 %>% filter(eventName == "Render")
 render_12 = render_12[,c(2,3,7,8,10,20)]
 render_12 = render_12 %>% distinct()
 
@@ -107,7 +103,7 @@ plot_G = ggplot(render_12, aes(y, -x)) + geom_tile(aes(fill = time_difference)) 
 
 
 #by Saving Config time
-Saving_Config_12 = runtime__final_data_12 %>% filter(eventName == "Saving Config")
+Saving_Config_12 = runtime_final_data_12 %>% filter(eventName == "Saving Config")
 Saving_Config_12 = Saving_Config_12[,c(2,3,7,8,10,20)]
 Saving_Config_12 = Saving_Config_12 %>% distinct()
 
@@ -124,7 +120,7 @@ plot_H = ggplot(Saving_Config_12, aes(y, -x)) + geom_tile(aes(fill= time_differe
 
 
 #by Uploading time
-Uploading_12 = runtime__final_data_12 %>% filter(eventName == "Uploading")
+Uploading_12 = runtime_final_data_12 %>% filter(eventName == "Uploading")
 Uploading_12 = Uploading_12[,c(2,3,7,8,10,20)]
 Uploading_12 = Uploading_12 %>% distinct()
 
@@ -140,7 +136,7 @@ plot_I = ggplot(Uploading_12, aes(y, -x)) + geom_tile(aes(fill= time_difference)
 
 
 #by Tiling time
-Tiling_12 = runtime__final_data_12 %>% filter(eventName == "Tiling")
+Tiling_12 = runtime_final_data_12 %>% filter(eventName == "Tiling")
 Tiling_12 = Tiling_12[,c(2,3,7,8,10,20)]
 Tiling_12 = Tiling_12 %>% distinct()
 
@@ -157,10 +153,24 @@ plot_J = ggplot(Tiling_12, aes(y, -x)) + geom_tile(aes(fill= time_difference))+
 
 (plot_level_12 = ggarrange(plot_F, plot_G, plot_H,plot_I, plot_J, 
                            labels = c("A", "B", "C","D","E"),
-                           ncol = 3, nrow = 2)) 
-#%>% ggexport(filename = "graphs/heat map rendering time of events at level 12.png",width = 1000,height = 800)
+                           ncol = 3, nrow = 2)) %>% ggexport(filename = "graphs/heat map rendering time of events at level 12.png",width = 1000,height = 800)
 
 plot_level_12
-#Error in ggexport(., filename = "graphs/heat map rendering time of events at level 12.png",  : 
-#could not find function "ggexport"
+
 ##-------------------------------------------------------------------------------------------------------------------------------------
+
+
+## boxplot at level 12----------------------------------------------------------------------
+box_plot_12 = which(is.na(runtime_final_data_12$eventName))
+box_plot_12 = runtime_final_data_12[!is.na(runtime_final_data_12$eventName),]
+box_plot_12 = box_plot_12 %>% filter(eventType == "STOP")
+
+boxplot_12 = ggplot(box_plot_12, aes(y= time_difference, fill = eventName)) + geom_boxplot() + labs(title = "boxplot of runtimes of level 12 ")
+boxplot_12
+##---------------------------------------------------------------------------------------------
+
+
+(big_boxplot = ggarrange(boxplot_12, boxplot_8, 
+                    labels = c("A", "B"),
+                    ncol = 2, nrow = 1)) %>% ggexport(filename = "graphs/boxplot of event run times at level 12 and 8.png",
+                                                      width = 1000,height = 500)
