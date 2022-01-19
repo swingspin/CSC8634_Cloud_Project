@@ -15,7 +15,7 @@ plot_4 = ggplot(a2, aes(seconds_of_day, avg_gpu_memory_util))+geom_point()
 
 (plot5 = ggarrange(plot_1, plot_2,plot_3, plot_4,
                    labels = c("P", "Q", "R","S"),
-                   ncol = 2, nrow = 2))%>% ggexport(filename = "graphs/gpu performance by seconds of day .png",width = 1000,height = 1000)
+                   ncol = 2, nrow = 2))%>% ggexport(filename = "graphs/seconds_1.png",width = 1000,height = 1000)
 
 plot5
 
@@ -36,5 +36,5 @@ plot_4.4 = ggplot(a3, aes(seconds_of_day,avg_gpu_memory_util))+geom_point()+ lab
 
 (plot5.5 = ggarrange(plot_1.1, plot_2.2,plot_3.3, plot_4.4,
                      labels = c("P", "Q", "R","S"),
-                     ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/ idle gpu performance by seconds of day .png",width = 1000,height = 1000)
+                     ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/idel.png",width = 1000,height = 1000)
 

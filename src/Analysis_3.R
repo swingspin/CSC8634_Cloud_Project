@@ -1,7 +1,8 @@
 #Performance analysis based on hostnames/GPU nodes
 
+library(dplyr)
 ## grouped by hostname to see if any outlier performance is due to a specific host when gpus are idle
-a1 = analysis_dataset %>% drop_na(powerDrawWatt)
+a1 = analysis_dataset %>% na.omit(powerDrawWatt)
 a2 = a1 %>% filter(gpuUtilPerc<15 & gpuMemUtilPerc<15)
 a4 = a2 %>% 
   group_by(a2$hostname) %>%   summarise(total_power_drawn = sum(powerDrawWatt),
@@ -23,7 +24,7 @@ plot_i4 = ggplot(a4, aes(index, avg_gpu_memory_util))+geom_point()+ labs(title =
 
 (ploti5 = ggarrange(plot_i1, plot_i2,plot_i3, plot_i4,
                     labels = c("P", "Q", "R","S"),
-                    ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/idle gpu performance by hostname after indexing .png",
+                    ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/idle_gpu_performance.png",
                                                       width = 1000,height = 1000)
 ploti5
 ##--------------------------------------------------------------------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ plot_n4 = ggplot(final_host_gpu_performance, aes(index, average_gpu_memory_util)
 
 (plotn5 = ggarrange(plot_n1, plot_n2,plot_n3, plot_n4,
                     labels = c("P", "Q", "R","S"),
-                    ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/scatter plot of gpu performance by hostname after indexing .png",
+                    ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/gpu_performance_by_hostname.png",
                                                       width = 1000,height = 1000)
 plotn5
 ##--------------------------------------------------------------------------------------------------------------------
@@ -73,6 +74,6 @@ plotS = ggplot(idle, aes(index, gpu_memory_util, colour = state))+geom_point()
 
 (plot_pqrs = ggarrange(plotP, plotQ,plotR, plotS,
                        labels = c("P", "Q", "R","S"),
-                       ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/gpu performance (idle vs rendering) by hostname after indexing .png",
+                       ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/idle_vs_rendering_by_hostname.png",
                                                          width = 1000,height = 1000)
 plot_pqrs

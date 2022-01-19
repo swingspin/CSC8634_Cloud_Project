@@ -5,9 +5,12 @@ x2 = x1 %>% group_by(x1$time_difference) %>% summarise(average_total_power_drawn
 names(x2)[1] = 'time_difference'
 
 plotTR = ggplot(x2,aes(time_difference, average_total_power_drawn))+geom_point()+labs(title = "Average power drawn by taskId vs total rendering time",
-x = "Total rendering time", y = "Average power drawn in Watt") %>% ggexport(filename = "graphs/scatter plot of total power drawn by total render time by tasks .png",width = 1000,height = 1000)
+x = "Total rendering time", y = "Average power drawn in Watt")
 
+
+#Save the plotin the graphs directory
 plotTR
+ggsave(file.path('graphs','interplay_1.png'))
 
 #Using Correlation method to check more about the relation between total render time vs average (total_power_drawn)
 #Using correlation across each pre_loaded different months runned file
@@ -28,9 +31,13 @@ plotTR4 = ggplot(x2,aes(time_difference, average_gpu_memory_util))+geom_point()+
 
 
 (plotTR2.0 = ggarrange(plotTR2,plotTR3, plotTR4,
-                       labels = c("A", "B", "C"))) %>% ggexport(filename = "graphs/scatter plot of gpu performance by total render time by tasks .png",width = 1000,height = 1000)
+                       labels = c("A", "B", "C")))
 
+
+
+#Save the plotin the graphs directory
 plotTR2.0
+ggsave(file.path('graphs','interplay_2.png'))
 
 #Using Correlation method to check more about the relation between total render time vs average (total_power_drawn)
 #Using correlation across each pre_loaded different months runned file

@@ -25,7 +25,7 @@ gpu_performance_12  = ggarrange(plotPW, plotT, plotU,plotM,
 
 (gpu_performance_12 = ggarrange(plotPW, plotT, plotU,plotM, 
                                 labels = c("A", "B", "C","D"),
-                                ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/gpu performance at level 12.png",width = 1000,height = 1000)
+                                ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/gpu_performance_12.png",width = 1000,height = 1000)
 gpu_performance_12
 
 ## for level 8
@@ -51,7 +51,7 @@ plotM8 = ggplot(gpu_analysis_8, aes(y, -x)) +scale_fill_viridis(discrete=FALSE) 
 
 (plot_gpu_performance_8  = ggarrange(plotPW8, plotT8, plotU8,plotM8, 
                                      labels = c("A", "B", "C","D"),
-                                     ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/gpu performance at level 8.png",
+                                     ncol = 2, nrow = 2)) %>% ggexport(filename = "graphs/gpu_performance_8.png",
                                                                        width = 1000,height = 1000)
 plot_gpu_performance_8
 ##----------------------------------------------------------------------------------------------------

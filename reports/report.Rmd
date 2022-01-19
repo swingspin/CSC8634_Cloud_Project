@@ -1,4 +1,9 @@
 ---
+output:
+  pdf_document: default
+  html_document: default
+---
+---
 title: "Report - TERASCOPE_CSC8634"
 author: "Parth Umeshkumar Shah"
 date: "17/01/2022"
@@ -13,11 +18,11 @@ knitr::opts_knit$set(root.dir= normalizePath('..'))
 ```{r include=FALSE}
 library(ProjectTemplate)
 load.project()
-source("src/Analysis_1.R")
-source("src/Analysis_2.R")
-source("src/Analysis_3.R")
-source("src/Analysis_4.R")
-source("src/Analysis_5.R")
+source("src/Analysis_1.R", local = knitr::knit_global())
+source("src/Analysis_2.R", local = knitr::knit_global())
+source("src/Analysis_3.R", local = knitr::knit_global())
+source("src/Analysis_4.R", local = knitr::knit_global())
+source("src/Analysis_5.R", local = knitr::knit_global())
 
 ```
 
@@ -25,10 +30,11 @@ source("src/Analysis_5.R")
 
 Terapixel images, this images allow viewers to browse big data across multiple scales in an interactive and intuitive manner, allowing stakeholders to interact with them. By computing realistic terapixel visualizations, Newcastle Urban Observatory captured a huge amount of environmental data about Newcastle Upon Tyne
 
-```{r include=FALSE}
-http://terapixel.wasabi.1024.s3.eu-central-1.wasabisys.com/vtour/index.html 
-```
 
+http://terapixel.wasabi.1024.s3.eu-central-1.wasabisys.com/vtour/index.html 
+
+
+## A major challenge : 
 A major challenge here was to find a way to deliver the supercomputer-scale resources required to compute the terapixels above. An example of a solution is to use a scalable architecture for cloud-based visualization, which can be deployed and paid for as needed. This work aims to achieve the following three objectives: 
 
 Develop a public cloud-based supercomputer architecture for scalable visualization; Visualization of terapixel 3D cities with daily updates; To conduct a rigorous evaluation of cloud supercomputing for visualization applications that are computationally intensive.
@@ -37,7 +43,7 @@ Based on a demonstration conducted, it was possible to produce high quality tera
 
 The performance of a supercomputer is further evaluated by storing data associated with terapixel generation.
 
-A report based on analysis of the following information obtained from super cloud computer: 
+## A report based on analysis of the following information obtained from super cloud computer: 
 
 1. A "gpu dataset" contains timestamps when the gpu information is recorded, a hostname, a gpu serial number, and a gpu UUID representing the gpu node from which the specific observation was recorded, and parameters recording the gpu's power, temperature, utilization, and memory usage.
 
@@ -45,7 +51,7 @@ A report based on analysis of the following information obtained from super clou
 
 3. "application checkpoints dataset" which consists the timestamps of taskId at specific checkpoints when an event starts or stops along with gpu node where the taskId was rendered. 
 
-# Quick insights into datasets in detail : 
+## Quick insights into datasets in detail : 
 
 In "application.checkpoints", there are 660400 observations about 6 variables - timestamp, eventType, jobId, taskId, hostname,eventName
 
@@ -77,7 +83,7 @@ summary(gpu[,c(5:8)])
 * 5 events associated to every taskId and timestamps are logged at time when each of the events starts and stops rendering process.
 
 
-# Analyses based on initial insights and findings
+## Analyses based on initial insights and findings
 
 * As there are 3 datasets, connecting them as a merged dataset to work based on taskId can be helpful to analyse data further
 
@@ -104,11 +110,11 @@ summary(gpu[,c(5:8)])
 
 4. timestamp and taskId are key thread in the connecting datasets. full_dataset can be considered as log files with all the values recorded in time series. NA values of those taskId's before total render stops can be replaced with the last observed value as all the values of taskId between total render start and total render stop belongs to one taskId. Underlying assumption here is that each gpu host can only run one taskId at any instance. full_dataset is mutated by locf function (last observation carried forward) on taskId as priority and on x,y,level and jobId to ease the further analysis. 
 
-Note: full_dataset should be ordered by hostname and timestamp before using locf function.
+Note:full_dataset should be ordered by hostname and timestamp before using locf function.
 
-5.In this step, the mutated data from the previous step is converted to a value on which arithmetic operations can be performed. timestamp is converted into a value which represents number of seconds since 00:00:00 hours:minutes:seconds of the day. It is important to check the date of timestamp. As the terapixel is rendered on the same day, considering the seconds passed from 00:00:00 will not be wrong, but it is very important to check before proceeding in this method.
+5. In this step, the mutated data from the previous step is converted to a value on which arithmetic operations can be performed. timestamp is converted into a value which represents number of seconds since 00:00:00 hours:minutes:seconds of the day. It is important to check the date of timestamp. As the terapixel is rendered on the same day, considering the seconds passed from 00:00:00 will not be wrong, but it is very important to check before proceeding in this method.
 
-example: 09:41:25 hr:mm:ss = 09x60x60+41x60+25 = 34885.
+example - 09:41:25 hr:mm:ss = 09x60x60+41x60+25 = 34885.
 
 6. After the data obtained from the above step has been renamed & sorted, it is referred to as final_dataset.
 
@@ -132,7 +138,6 @@ hist(gpu_dataset$gpuMemUtilPerc, breaks = 50,col = c("blue", "red", "gray", "gre
 * Post that final_gpu_performance is joined by taskId and named as analysis_dataset. Further exploratory data analysis is possible with this dataset, since it contains the information required to perform any analysis between all variables.
 
 
-
 # Graphical analysis and summaries
 https://www.r-graph-gallery.com/79-levelplot-with-ggplot2.html
 
@@ -142,22 +147,17 @@ https://www.r-graph-gallery.com/79-levelplot-with-ggplot2.html
 
 * each of the event are filtered at level 8 and heat map of runtimes specific to tasks are plotted over x,y coordiantes as the taskId have unique x, y coordinates.
 
-```{r, echo=FALSE, figures-side4, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotA
-plotB
+
+
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "heat_map_1.png"))
 ```
 
-```{r, echo=FALSE, figures-side5, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotC
-plotD
+
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "heat_map_2.png"))
 ```
 
-```{r, echo=FALSE, figures-side6, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotE
-```
 
 * from the above graphs, saving configurations seems to be constant for all taskId's
 * the heat map of rendering shows how good a time difference is present with respect to each taskID, moreover it shows how efficiently every pixel is rendered in super computers
@@ -175,21 +175,8 @@ boxplot_8
 * Every event is filtered at level 12 and heat map of runtimes specific to tasks are plotted over x,y coordiantes as taskId has an unique x, y coordinates
 
 
-```{r, echo=FALSE, figures-side1, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot1
-plot2
-```
-
-```{r, echo=FALSE, figures-side2, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot3
-plot4
-```
-
-```{r, echo=FALSE, figures-side3, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot5
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "heat_map_3.png"))
 ```
 
 * Most of the grid appears to have constant upload times except for a few areas of black dots representing the fastest upload times which seems to have a pattern or a trend as they are all located over a vertical line. this seems to be further analyzed to understand its nature.
@@ -200,16 +187,15 @@ plot5
 
 * for more and significant understanding of runtimes, boxplot of each event is generated as below:
 
-```{r, BoxPlot, echo=FALSE,fig.height=4, fig.width=6}
-boxplot_12 
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "boxplot_12_8.png"))
 ```
-
 * According to the above boxplot, render is absolutely dominating the total rendering process. Also, there seems to be quite a significant number of outliers in uploading runtime. from the above heat map and boxplot of uploading runtime, it is very clear that there is an exceptional activity occurring which needs more information to understand what is happening.
 
 * comparing with runtimes of level 12 and 8, uploading time looks to be more dominating in level 8 than that of level 12 with a similarity that uploading runtimes have many outliers. 
 
 
-Performance analysis based on hostnames/GPU nodes
+##Performance analysis based on hostnames/GPU nodes
 
 1. non idle hostname/gpu node performance 
 
@@ -219,17 +205,8 @@ Performance analysis based on hostnames/GPU nodes
 
 * Graphs showing non-idle host performance are shown below.
 
-```{r, echo=FALSE, figures-side18, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot_i1
-plot_i2
-```
-
-
-```{r, echo=FALSE, figures-side19, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot_i3
-plot_i4
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "idle_gpu_performance.png"))
 ```
 
 
@@ -252,17 +229,8 @@ gpu_non_idle_outliers
 
 * Idle host performance graphs are shown below:
 
-```{r, echo=FALSE, figures-side88, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot_n1
-plot_n2
-```
-
-
-```{r, echo=FALSE, figures-side85, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot_n3
-plot_n4
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "gpu_performance_by_hostname.png"))
 ```
 
 * According to the graphs above, total power drawn by gpu nodes include 5 outliers that drew much more power than the rest, which is comparable to what is shown in non-idle gpu node performance.
@@ -281,23 +249,11 @@ gpu_idle_outliers
 
 * This graph will be more helpful in depicting the wide range of differences found in both gpu states:
   
-```{r, echo=FALSE, figures-side20, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotP
-plotQ
-```
-
-
-```{r, echo=FALSE, figures-side21, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotR
-plotS
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "idle_vs_rendering_by_hostname.png"))
 ```
 
 * Here it can be visualized effectively that how the total power drawn in the non-ideal state differs significantly from the consumed power in the ideal state; it also states that the ideal state increases the per-gpu temperature equivalent to the non-ideal performing gpus, and thus they may be hindering; and finally, the gpu memory utility can be seen to differ significantly in both states.
-
-
-
 
 #Analysis of gpu variables on basis of seconds of day.
 
@@ -308,16 +264,8 @@ plotS
 * Time series graphs with seconds of the day plotted against summary GPU variables are shown below.
 
 
-```{r, echo=FALSE, figures-side90, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot_1
-plot_2
-```
-
-```{r, echo=FALSE, figures-side91, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot_3
-plot_4
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "seconds_1.png"))
 ```
 
 * When tera pixel rendering is started, the total power drawn by the supercomputer appears to be in the region of under 500 kilo Watts with few outliers, based on the above graphs. This could be linked to the uploading runtime anomaly.
@@ -326,23 +274,14 @@ plot_4
 
 * When rendering begins, gpu and memory utilisation appear to be at lower levels, however they fluctuate within the same range throughout the duration.
 
-# checking for
-Idle performance time series examination of GPU variables:
+# checking for-Idle performance time series examination of GPU variables:
 
 * Idle values of variables are filtered by gpu utilisation & gpu memory utilisation less than 15, summarised by gpu variables, and grouped by seconds of day on the same premise as the above analysis.
 
 * The time series graphs below show the supercomputer's overall performance when the GPU is idle :
 
-```{r, echo=FALSE, figures-side92, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot_1.1
-plot_2.2
-```
-
-```{r, echo=FALSE, figures-side93, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plot_3.3
-plot_4.4
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "idel.png"))
 ```
 * According to the graphs above, the total power required by a supercomputer in idle mode is in the range of 4-7 kilowatts, but outliers can be seen at the beginning and conclusion of rendering a tera pixel. The reason for this behaviour cannot be discovered from this research, however it does serve as a starting point for further investigation.
 
@@ -359,43 +298,30 @@ plot_4.4
 
 * The heat maps below are sorted by taskId and based on aggregated gpu variables over x,y coordinates.
 
-```{r, echo=FALSE, figures-side10, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotPW
-plotT
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "gpu_performance_12.png"))
 ```
 
-```{r, echo=FALSE, figures-side11, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotU
-plotM
-```
 * It can be seen from the above graphs that the gpu temperature does not provide any information, whereas the other three heat maps resemble a map-like structure of the tera pixel rendered, and that it appears to be related to the number of sensors fixed in each area; as we look into the terapixel image, we can see that where the sensors are more placed, we can find less average power drawn and less average power memory utility.
 
 * Although specific data cannot be understood, the heat map generated appears to be quite crisp, with map features plainly evident.
 
-2. For level 8
+### 2. For level 8
 
 * Gpu variables associated with level 8 rendering are summarized and plotted as below.
 
-```{r, echo=FALSE, figures-side12, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotPW8
-plotT8
-```
 
-```{r, echo=FALSE, figures-side13, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotU8
-plotM8
+
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "gpu_performance_8.png"))
 ```
 
 * no specific interpretation can be determined from the above heat maps, although the total power drawn by idel gpu is more in range from 1000-3000 and the average utility is on higher side  i.e. here >=90.
 
-Note: Here the above 2 analysis on gpu performance variables which generated heat maps are filtered on gpuUtil, gpuMemUtil whose values are greater than 15 as reasoned in data preprocessing step 8.
+Note:Here the above 2 analysis on gpu performance variables which generated heat maps are filtered on gpuUtil, gpuMemUtil whose values are greater than 15 as reasoned in data preprocessing step 8.
 
 
-## analysis on total rendering time and gpu performance variables:
+## Analysis on total rendering time and gpu performance variables:
 
 
 ## Interplay between increased power draw and total render time
@@ -407,54 +333,52 @@ Note: Here the above 2 analysis on gpu performance variables which generated hea
 * The graph below were created using time difference drew drew aganist power drawn
 
 
-```{r, echo=FALSE, figures-side22, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotTR
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "interplay_1.png"))
 ```
 
 * As can be seen in the graph above, power drawn grows as total rendering time increases, but the pattern appears to alter between time difference 50 and 70, with a sharp reduction in all values that finally rose. Although no important reason has been discovered.
-*USING CORRELATION TO CHECK OVERALL RELATION BETWEEN THIS 2 VARIABLES.
 
+* USING CORRELATION TO CHECK OVERALL RELATION BETWEEN THIS 2 VARIABLES.
+
+```{r, echo=TRUE}
+head(host_gpu_performance)
+# cor(x2$time_difference, x2$average_total_power_drawn)
 ```
-cor(x2$time_difference, x2$average_total_power_drawn)
-```
 
-*this relation confirms the linearity amount between two but the decrement after time diffrence 50 is still the question
+* this relation confirms the linearity amount between two but the decrement after time diffrence 50 is still the question
 
-#on basis of plot-pattern obtained in above question,checking the pattern of other gpu variables with total render time
+### On basis of plot-pattern obtained in above question,checking the pattern of other gpu variables with total render time:
 
 * total rendering runtime stored as time_difference is grouped and summarized on gpu variables.
 
 * below are graphs generated with time_difference aganist gpu variables
 
-```{r, echo=FALSE, figures-side23, fig.show="hold", out.width="50%",fig.height=4, fig.width=7}
-par(mar = c(4, 4, .1, .1))
-plotTR2
-plotTR3
-plotTR3
+```{r  fig.align = 'center', out.width = "70%", fig.cap = "Analysis of desktop users based on total views of the modules", echo = FALSE}
+knitr::include_graphics(here::here("graphs", "interplay_2.png"))
 ```
 
 #Using Correlation method to check more about the relation between total render time vs gpu variables
-```{r include=FALSE}
-cor(x2$time_difference, x2$average_gpu_temp)
-cor(x2$time_difference, x2$average_gpu_memory_util)
-cor(x2$time_difference, x2$average_gpu_util)
+```{r include=TRUE}
+#cor(x2$time_difference, x2$average_gpu_temp)
+#cor(x2$time_difference, x2$average_gpu_memory_util)
+#cor(x2$time_difference, x2$average_gpu_util)
 ```
 
-*Similar pattern as power drawn graph is obatined here too,all gpu variables grow as total rendering time increases, however the trend appears to change route between time difference 50 and 70. All of the values dropped suddenly, but then rose again.
+* Similar pattern as power drawn graph is obatined here too,all gpu variables grow as total rendering time increases, however the trend appears to change route between time difference 50 and 70. All of the values dropped suddenly, but then rose again.
 
-#There was no significant reason found, but this can be used as a starting point to figure out why there is a decline in values when overall rendering time is really long.
+# There was no significant reason found, but this can be used as a starting point to figure out why there is a decline in values when overall rendering time is really long.
 
 
-#ideas and focal areas post analysis
+# Ideas and focal areas post analysis
 
-* operational approaches that might reduce gpu idle state, increasing super cloud computer availability and lowering power consumption.(Note : here we have considered gpu as idle if gpu utlization and gpu memory utilization are less than 15 percent)
+* Operational approaches that might reduce gpu idle state, increasing super cloud computer availability and lowering power consumption.(Note : here we have considered gpu as idle if gpu utlization and gpu memory utilization are less than 15 percent)
 1. How the sensors in a per square area affects the utility or consumption, further future research on it might be helpful in many ways.
 2. Focus on ones having GPU utilisation and memory utilisation are less than 20%, work must be done investigating on it since they cost power, influence GPU temperature, and produce results that are not what we expected.
 3. Introduce operating methods that could reduce idle state of gpu.
 
 * In both idle and non-idle states,we found out GPU nodes that consume a lot of power,replace such outliers.
-*Emphasis should be made on :
+* Emphasis should be made on :
 1. why is the average of all gpu variables dropping as total rendering time approaches 50 seconds?
 2. why uploading runtimes are high at the start of terapixel rendering?
 3. Idel state tempreture fluctuations are why decreasing in the final stages so rapidly and why in idle state total power drawn by super cloud computer is increasing in the initial and final stages of terapixel rendering.

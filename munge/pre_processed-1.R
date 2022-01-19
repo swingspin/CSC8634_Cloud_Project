@@ -1,4 +1,4 @@
- #library("ProjectTemplate")
+#library("ProjectTemplate")
 #load.project()
 #install.packages("ggpubr")
 
@@ -10,6 +10,7 @@ library(hrbrthemes)
 library(ggplot2)
 #install.packages("viridis")
 library(viridis)
+library(dplyr)
 ##Data-pre_processing part 01
 ## joining data sets by mutating observations given to analyze
 

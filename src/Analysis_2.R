@@ -9,9 +9,9 @@ total_rendering_8 = runtime_final_data_8 %>% filter(eventName == "TotalRender")
 total_rendering_8 = total_rendering_8[,c(2,3,7,8,10,20)]
 total_rendering_8 = total_rendering_8 %>% distinct()
 plot_A = ggplot(total_rendering_8, aes(y, -x, fill= time_difference)) + geom_tile() +scale_fill_viridis(discrete=FALSE) + theme_ipsum()+labs(title = "Total rendering runtime heat map based on taskId ")
-plot_A
-install.packages("viridis")
-library(viridis)
+
+
+
 
 #by render time
 render_8 = runtime_final_data_8 %>% filter(eventName == "Render")
@@ -47,11 +47,25 @@ library(ggpubr)
 
 (plot_REDA8 = ggarrange(plot_A, plot_B, plot_C,plot_D, plot_E, 
                         labels = c("A", "B", "C","D","E"),
-                        ncol = 2, nrow = 3)) %>% ggexport(filename = "graphs/heat map rendering time of events at level 8.png",width = 1000,height = 1000)
+                        ncol = 1, nrow = 5))
+
+                                                                                                                                                                      
 plot_REDA8
 #Error in ggexport(., filename = "graphs/heat map rendering time of events at level 8.png",  : 
 #could not find function "ggexport"
 ##-------------------------------------------------------------------------------------------------------------------------------
+(plot_x = ggarrange( plot_A,plot_B,
+                        labels = c("A", "B"),
+                        ncol = 1, nrow = 2))%>% ggexport(filename = "graphs/heat_map_1.png",width = 1000,height = 1000)
+
+(plot_y = ggarrange(plot_C,plot_D , plot_E,
+                    labels = c( "C","D", "E"),
+                    ncol = 1, nrow = 3))%>% ggexport(filename = "graphs/heat_map_2.png",width = 800,height = 800)
+
+
+#plot_x
+#ggsave(file.path('graphs','plot_x.png'),width = 195, height = 40 )
+
 
 ##boxplot at level 8-----------------------------------------------------------------------------------
 box_plot_8 = which(is.na(runtime_final_data_8$eventName))
@@ -153,7 +167,7 @@ plot_J = ggplot(Tiling_12, aes(y, -x)) + geom_tile(aes(fill= time_difference))+
 
 (plot_level_12 = ggarrange(plot_F, plot_G, plot_H,plot_I, plot_J, 
                            labels = c("A", "B", "C","D","E"),
-                           ncol = 3, nrow = 2)) %>% ggexport(filename = "graphs/heat map rendering time of events at level 12.png",width = 1000,height = 800)
+                           ncol = 3, nrow = 2)) %>% ggexport(filename = "graphs/heat_map_3.png",width = 1000,height = 800)
 
 plot_level_12
 
@@ -172,5 +186,5 @@ boxplot_12
 
 (big_boxplot = ggarrange(boxplot_12, boxplot_8, 
                     labels = c("A", "B"),
-                    ncol = 2, nrow = 1)) %>% ggexport(filename = "graphs/boxplot of event run times at level 12 and 8.png",
+                    ncol = 2, nrow = 1)) %>% ggexport(filename = "graphs/boxplot_12_8.png",
                                                       width = 1000,height = 500)
