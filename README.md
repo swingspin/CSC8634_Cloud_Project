@@ -1,4 +1,4 @@
-# CSC_8631_Project
+# Cloud Computing Terapixel Image Analysis
 
 Welcome to ProjectTemplate!
 
